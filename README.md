@@ -2,6 +2,8 @@
 
 System Space Waker is a Django app for organizing documents, saving reference pages, and generating study questions from uploaded content.
 
+![alt text](image.png)
+
 ## Features
 
 - Upload and organize documents by category
@@ -15,6 +17,8 @@ System Space Waker is a Django app for organizing documents, saving reference pa
 - `Documents`: upload files, categorize them, and browse the library
 - `Pages`: save external URLs and render them inside the app when embedding is allowed
 - `Study Coach`: read a document and generate guided comprehension questions using SambaNova
+
+![alt text](image-1.png)
 
 ## Tech Stack
 
