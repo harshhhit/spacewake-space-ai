@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Home | System Space Waker{% endblock %}
+
+{% block content %}
+<section class="panel overflow-hidden rounded-[2.25rem] p-8 lg:p-10">
+    <div class="grid gap-10 lg:grid-cols-[1.2fr,0.8fr] lg:items-center">
+        <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.35em] text-glow">Workspace Hub</p>
+            <h1 class="mt-4 max-w-3xl text-4xl font-extrabold leading-tight text-white sm:text-5xl">One place to collect documents, save pages, and turn knowledge into guided learning.</h1>
+            <p class="mt-5 max-w-2xl text-lg leading-8 text-mist/75">Use the document library to store notes and PDFs, keep a page library for reference links, and open Study Coach to generate basic or intermediate understanding questions from your material.</p>
+            <div class="mt-8 flex flex-wrap gap-3">
+                <a href="{% url 'add_document' %}" class="rounded-full bg-glow px-6 py-3 text-sm font-bold text-ink transition hover:brightness-110">Add a Document</a>
+                <a href="{% url 'manage_page_links' %}" class="rounded-full panel-soft px-6 py-3 text-sm font-semibold text-mist transition hover:text-white">Save a Page</a>
+                <a href="{% url 'generate_quiz' %}" class="rounded-full border border-white/15 px-6 py-3 text-sm font-semibold text-white transition hover:border-glow hover:text-glow">Launch Study Coach</a>
+            </div>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
+            <div class="panel-soft rounded-3xl p-5">
+                <p class="text-xs uppercase tracking-[0.25em] text-mist/60">Documents</p>
+                <p class="mt-3 text-4xl font-extrabold text-white">{{ total_documents }}</p>
+                <p class="mt-2 text-sm text-mist/65">Uploaded resources ready for reading and quiz generation.</p>
+            </div>
+            <div class="panel-soft rounded-3xl p-5">
+                <p class="text-xs uppercase tracking-[0.25em] text-mist/60">Saved Pages</p>
+                <p class="mt-3 text-4xl font-extrabold text-white">{{ total_pages }}</p>
+                <p class="mt-2 text-sm text-mist/65">Reference links you can keep and reopen from one place.</p>
+            </div>
+            <div class="panel-soft rounded-3xl p-5">
+                <p class="text-xs uppercase tracking-[0.25em] text-mist/60">Categories</p>
+                <p class="mt-3 text-4xl font-extrabold text-white">{{ total_categories }}</p>
+                <p class="mt-2 text-sm text-mist/65">Structured sections to keep your learning library organized.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mt-8 grid gap-6 xl:grid-cols-3">
+    <article class="panel-soft rounded-[2rem] p-6">
+        <p class="text-sm font-semibold uppercase tracking-[0.28em] text-glow">Documents</p>
+        <h2 class="mt-3 text-2xl font-bold text-white">Manage files</h2>
+        <p class="mt-3 text-sm leading-7 text-mist/70">Upload PDFs, notes, and files into categories, then reopen them quickly or send them to Study Coach.</p>
+        <div class="mt-5 flex flex-wrap gap-3">
+            <a href="{% url 'add_document' %}" class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink">Upload</a>
+            <a href="{% url 'view_documents' %}" class="rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-mist">Browse</a>
+        </div>
+    </article>
+    <article class="panel-soft rounded-[2rem] p-6">
+        <p class="text-sm font-semibold uppercase tracking-[0.28em] text-glow">Page Library</p>
+        <h2 class="mt-3 text-2xl font-bold text-white">Save useful links</h2>
+        <p class="mt-3 text-sm leading-7 text-mist/70">Store URLs for docs, references, or dashboards and reopen them from a cleaner internal catalog.</p>
+        <div class="mt-5 flex flex-wrap gap-3">
+            <a href="{% url 'manage_page_links' %}" class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink">Open Pages</a>
+        </div>
+    </article>
+    <article class="panel-soft rounded-[2rem] p-6">
+        <p class="text-sm font-semibold uppercase tracking-[0.28em] text-glow">Study Coach</p>
+        <h2 class="mt-3 text-2xl font-bold text-white">Generate questions</h2>
+        <p class="mt-3 text-sm leading-7 text-mist/70">Choose a document and get comprehension questions at basic or intermediate level to test understanding.</p>
+        <div class="mt-5 flex flex-wrap gap-3">
+            <a href="{% url 'generate_quiz' %}" class="rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink">Generate Quiz</a>
+        </div>
+    </article>
+</section>
+
+<section class="mt-8 grid gap-6 lg:grid-cols-2">
+    <div class="panel rounded-[2rem] p-6">
+        <div class="flex items-center justify-between gap-3">
+            <div>
+                <p class="text-sm font-semibold uppercase tracking-[0.28em] text-glow">Recent Documents</p>
+                <h2 class="mt-2 text-2xl font-bold text-white">Latest uploads</h2>
+            </div>
+            <a href="{% url 'view_documents' %}" class="text-sm font-semibold text-glow hover:text-white">View all</a>
+        </div>
+        <div class="mt-6 space-y-4">
+            {% for doc in documents %}
+            <article class="panel-soft rounded-3xl p-5">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold text-white">{{ doc.title }}</h3>
+                        <p class="mt-2 text-sm text-mist/65">Category: {{ doc.category.name }} | Section: {{ doc.section }}</p>
+                        {% if doc.description %}
+                        <p class="mt-3 text-sm text-mist/70">{{ doc.description }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <a href="{{ doc.file.url }}" target="_blank" class="rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-mist">Open</a>
+                        <a href="{% url 'generate_quiz' %}?document_id={{ doc.id }}" class="rounded-full bg-glow px-4 py-2 text-sm font-bold text-ink">Quiz</a>
+                    </div>
+                </div>
+            </article>
+            {% empty %}
+            <div class="rounded-3xl border border-dashed border-white/15 p-8 text-center text-mist/60">No documents yet. Start by adding your first upload.</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="panel rounded-[2rem] p-6">
+        <div class="flex items-center justify-between gap-3">
+            <div>
+                <p class="text-sm font-semibold uppercase tracking-[0.28em] text-glow">Recent Pages</p>
+                <h2 class="mt-2 text-2xl font-bold text-white">Saved reference links</h2>
+            </div>
+            <a href="{% url 'manage_page_links' %}" class="text-sm font-semibold text-glow hover:text-white">Open library</a>
+        </div>
+        <div class="mt-6 space-y-4">
+            {% for page in page_links %}
+            <article class="panel-soft rounded-3xl p-5">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold text-white">{{ page.title }}</h3>
+                        <a href="{{ page.url }}" target="_blank" class="mt-2 inline-block break-all text-sm text-glow hover:text-white">{{ page.url }}</a>
+                        {% if page.description %}
+                        <p class="mt-3 text-sm text-mist/70">{{ page.description }}</p>
+                        {% endif %}
+                    </div>
+                    <a href="{% url 'render_page_link' page.id %}" class="rounded-full bg-white px-4 py-2 text-sm font-bold text-ink">Render</a>
+                </div>
+            </article>
+            {% empty %}
+            <div class="rounded-3xl border border-dashed border-white/15 p-8 text-center text-mist/60">No saved pages yet. Add a useful reference link.</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

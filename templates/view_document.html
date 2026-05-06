@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Documents | System Space Waker{% endblock %}
+
+{% block content %}
+<section class="panel rounded-[2rem] p-8">
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.35em] text-glow">Document Library</p>
+            <h1 class="mt-3 text-4xl font-extrabold text-white">Browse your uploaded documents</h1>
+            <p class="mt-4 max-w-2xl text-mist/70">Open files directly, review their category, or send them into Study Coach with one click.</p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+            <a href="{% url 'home' %}" class="rounded-full panel-soft px-5 py-3 text-sm font-semibold text-mist">Go Back Home</a>
+            <a href="{% url 'add_document' %}" class="rounded-full bg-glow px-5 py-3 text-sm font-bold text-ink">Add Document</a>
+            <a href="{% url 'generate_quiz' %}" class="rounded-full border border-white/10 px-5 py-3 text-sm font-semibold text-white hover:border-glow hover:text-glow">Study Coach</a>
+        </div>
+    </div>
+</section>
+
+<section class="mt-8 space-y-4">
+    {% for doc in documents %}
+    <article class="panel-soft rounded-[2rem] p-6">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+                <div class="flex flex-wrap items-center gap-3">
+                    <h2 class="text-2xl font-bold text-white">{{ doc.title }}</h2>
+                    <span class="rounded-full bg-glow/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-glow">{{ doc.section }}</span>
+                </div>
+                <p class="mt-3 text-sm text-mist/65">Category: {{ doc.category.name }} | File: {{ doc.filename }} | Added: {{ doc.created_at|date:"M d, Y" }}</p>
+                {% if doc.description %}
+                <p class="mt-3 max-w-3xl text-mist/75">{{ doc.description }}</p>
+                {% endif %}
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <a href="{{ doc.file.url }}" target="_blank" class="rounded-full border border-white/10 px-4 py-2 text-sm font-semibold text-mist">View File</a>
+                <a href="{% url 'generate_quiz' %}?document_id={{ doc.id }}" class="rounded-full bg-white px-4 py-2 text-sm font-bold text-ink">Generate Questions</a>
+            </div>
+        </div>
+    </article>
+    {% empty %}
+    <div class="panel-soft rounded-[2rem] p-10 text-center text-mist/60">No documents found yet.</div>
+    {% endfor %}
+</section>
+{% endblock %}

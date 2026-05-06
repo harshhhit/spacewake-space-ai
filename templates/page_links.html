@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Saved Pages | System Space Waker{% endblock %}
+
+{% block content %}
+<section class="grid gap-8 xl:grid-cols-[0.95fr,1.05fr]">
+    <div class="panel rounded-[2rem] p-8">
+        <p class="text-sm font-semibold uppercase tracking-[0.35em] text-glow">Page Library</p>
+        <h1 class="mt-3 text-4xl font-extrabold text-white">Save and render useful pages</h1>
+        <p class="mt-4 text-mist/70">Keep important URLs inside the workspace and reopen them from a cleaner internal index. If a site blocks embedding, you can still open the original page.</p>
+
+        <form method="post" class="mt-8 space-y-5">
+            {% csrf_token %}
+            <div>
+                <label for="id_title" class="mb-2 block text-sm font-semibold text-mist/80">Title</label>
+                <input id="id_title" name="title" type="text" value="{{ form.title.value|default:'' }}" required class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition focus:border-glow">
+            </div>
+            <div>
+                <label for="id_url" class="mb-2 block text-sm font-semibold text-mist/80">Page URL</label>
+                <input id="id_url" name="url" type="text" value="{{ form.url.value|default:'' }}" placeholder="https://example.com" required class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition focus:border-glow">
+            </div>
+            <div>
+                <label for="id_description" class="mb-2 block text-sm font-semibold text-mist/80">Description</label>
+                <textarea id="id_description" name="description" rows="4" class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition focus:border-glow">{{ form.description.value|default:'' }}</textarea>
+            </div>
+            {% if form.errors %}
+            <div class="rounded-2xl border border-coral/30 bg-coral/10 p-4 text-sm text-coral">
+                {{ form.errors }}
+            </div>
+            {% endif %}
+            <div class="flex flex-wrap gap-3">
+                <button type="submit" class="rounded-full bg-glow px-6 py-3 text-sm font-bold text-ink">Save Page</button>
+                <a href="{% url 'home' %}" class="rounded-full panel-soft px-6 py-3 text-sm font-semibold text-mist">Go Back Home</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="panel rounded-[2rem] p-8">
+        <div class="flex items-center justify-between gap-3">
+            <div>
+                <p class="text-sm font-semibold uppercase tracking-[0.28em] text-glow">Saved Pages</p>
+                <h2 class="mt-2 text-2xl font-bold text-white">Your reference library</h2>
+            </div>
+            <span class="rounded-full border border-white/10 px-4 py-2 text-xs uppercase tracking-[0.25em] text-mist/65">{{ page_links|length }} total</span>
+        </div>
+
+        <div class="mt-6 space-y-4">
+            {% for page in page_links %}
+            <article class="panel-soft rounded-3xl p-5">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold text-white">{{ page.title }}</h3>
+                        <a href="{{ page.url }}" target="_blank" rel="noopener noreferrer" class="mt-2 inline-block break-all text-sm text-glow hover:text-white">{{ page.url }}</a>
+                        {% if page.description %}
+                        <p class="mt-3 text-sm text-mist/70">{{ page.description }}</p>
+                        {% endif %}
+                    </div>
+                    <a href="{% url 'render_page_link' page.id %}" class="rounded-full bg-white px-4 py-2 text-sm font-bold text-ink">Render Page</a>
+                </div>
+            </article>
+            {% empty %}
+            <div class="rounded-3xl border border-dashed border-white/15 p-8 text-center text-mist/60">No saved pages yet. Add your first URL from the left side.</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}System Space Waker{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    colors: {
+                        ink: "#09111f",
+                        mist: "#d7e6f5",
+                        line: "#20334c",
+                        panel: "#0d1728",
+                        glow: "#7dd3fc",
+                        mint: "#86efac",
+                        coral: "#fda4af"
+                    },
+                    boxShadow: {
+                        soft: "0 24px 80px rgba(5, 10, 20, 0.35)"
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background:
+                radial-gradient(circle at top left, rgba(125, 211, 252, 0.14), transparent 28%),
+                radial-gradient(circle at top right, rgba(134, 239, 172, 0.10), transparent 22%),
+                linear-gradient(180deg, #08111d 0%, #091423 45%, #07101c 100%);
+        }
+
+        .panel {
+            background: linear-gradient(180deg, rgba(13, 23, 40, 0.96), rgba(9, 17, 31, 0.92));
+            border: 1px solid rgba(125, 211, 252, 0.12);
+            box-shadow: 0 24px 80px rgba(5, 10, 20, 0.35);
+        }
+
+        .panel-soft {
+            background: linear-gradient(180deg, rgba(13, 23, 40, 0.82), rgba(9, 17, 31, 0.78));
+            border: 1px solid rgba(125, 211, 252, 0.1);
+        }
+
+        .nav-pill {
+            transition: all 180ms ease;
+        }
+
+        .nav-pill:hover {
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="min-h-screen font-sans text-white">
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <header class="panel sticky top-4 z-30 mb-8 rounded-[2rem] px-5 py-4 backdrop-blur">
+            <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                    <a href="{% url 'home' %}" class="text-lg font-extrabold tracking-[0.28em] text-glow uppercase">System Space Waker</a>
+                    <p class="mt-1 text-sm text-mist/70">Docs, saved pages, and AI study support in one workspace.</p>
+                </div>
+                <nav class="flex flex-wrap gap-2 text-sm font-medium">
+                    <a href="{% url 'home' %}" class="nav-pill rounded-full px-4 py-2 {% if request.path == '/' %}bg-glow text-ink{% else %}panel-soft text-mist hover:text-white{% endif %}">Home</a>
+                    <a href="{% url 'add_document' %}" class="nav-pill rounded-full px-4 py-2 {% if '/add_document/' in request.path %}bg-glow text-ink{% else %}panel-soft text-mist hover:text-white{% endif %}">Add Document</a>
+                    <a href="{% url 'view_documents' %}" class="nav-pill rounded-full px-4 py-2 {% if '/documents/' in request.path %}bg-glow text-ink{% else %}panel-soft text-mist hover:text-white{% endif %}">Documents</a>
+                    <a href="{% url 'manage_page_links' %}" class="nav-pill rounded-full px-4 py-2 {% if '/pages/' in request.path %}bg-glow text-ink{% else %}panel-soft text-mist hover:text-white{% endif %}">Pages</a>
+                    <a href="{% url 'generate_quiz' %}" class="nav-pill rounded-full px-4 py-2 {% if '/study/' in request.path %}bg-glow text-ink{% else %}panel-soft text-mist hover:text-white{% endif %}">Study Coach</a>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="mt-10 border-t border-white/10 py-6 text-sm text-mist/60">
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <p>Built for organizing documents, rendering saved pages, and generating guided learning questions.</p>
+                <a href="{% url 'home' %}" class="hover:text-white">Back to home</a>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
